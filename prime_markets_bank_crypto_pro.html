@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Prime Markets Bank & Crypto Pro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        prime: {
+                            bg: '#05070a',
+                            surface: '#0B0E14',
+                            card: '#12161F',
+                            cardHover: '#1A202C',
+                            accent: '#0ECB81',
+                            accentHover: '#10D88B',
+                            gold: '#F0B90B',
+                            danger: '#F6465D',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            textMuted: '#848E9C'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glow-emerald': '0 0 25px -5px rgba(14, 203, 129, 0.3)',
+                        'glow-card': '0 10px 30px -10px rgba(0, 0, 0, 0.7)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #05070a;
+            color: #f1f5f9;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom Scrollbar for Desktop */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0E14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1A202C;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ECB81;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(18, 22, 31, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Price Flashes */
+        @keyframes flashGreen {
+            0% { background-color: rgba(14, 203, 129, 0.25); }
+            100% { background-color: transparent; }
+        }
+        @keyframes flashRed {
+            0% { background-color: rgba(246, 70, 93, 0.25); }
+            100% { background-color: transparent; }
+        }
+        .flash-up { animation: flashGreen 0.8s ease-out; }
+        .flash-down { animation: flashRed 0.8s ease-out; }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .shake-err { animation: shake 0.35s ease-in-out; }
+
+        canvas {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="bg-[#05070a] text-gray-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Contentor Principal Adaptativo: Mobile + Desktop App Layout -->
+    <div class="w-full min-h-screen flex flex-col lg:flex-row max-w-[1600px] mx-auto relative bg-[#0B0E14] lg:shadow-2xl lg:border-x lg:border-gray-800/80">
+
+        <!-- ==================== DESKTOP SIDEBAR NAVIGATION ==================== -->
+        <aside class="hidden lg:flex flex-col w-72 bg-[#0B0E14] border-r border-gray-800/80 p-5 justify-between shrink-0 sticky top-0 h-screen z-30">
+            <div class="space-y-6">
+                <!-- Logo & Brand Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-gray-800/80">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-700 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-emerald-500/20">
+                            P
+                        </div>
+                        <div>
+                            <span class="text-base font-extrabold tracking-wider text-white block leading-none">PRIME</span>
+                            <span class="text-[9px] font-bold text-emerald-400 tracking-[0.2em] uppercase">Private Banking</span>
+                        </div>
+                    </div>
+                    <span class="text-[9px] bg-emerald-500/10 text-emerald-400 font-bold px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        PRO
+                    </span>
+                </div>
+
+                <!-- Perfil Rápido do Utilizador Desktop -->
+                <div class="p-3 bg-[#12161F] rounded-2xl border border-gray-800/80 flex items-center gap-3">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" 
+                             alt="User Profile" 
+                             class="w-10 h-10 rounded-xl object-cover border border-emerald-500/40"
+                             onerror="this.src='https://placehold.co/100x100/12161F/0ECB81?text=PRO'">
+                        <span class="absolute -bottom-1 -right-1 bg-emerald-500 text-black font-black text-[7px] px-1 rounded-full border border-[#0B0E14]">
+                            VIP
+                        </span>
+                    </div>
+                    <div class="overflow-hidden">
+                        <div class="text-xs font-bold text-white truncate" id="dt-user-name">Alexandre V. Rocha</div>
+                        <div class="text-[10px] text-emerald-400 font-medium truncate">Conta Verificada Pro</div>
+                    </div>
+                </div>
+
+                <!-- Navegação Principal Desktop -->
+                <nav class="space-y-1.5 text-xs font-semibold">
+                    <button onclick="navSwitchTo('home')" id="nav-item-home" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 font-bold transition">
+                        <i class="fa-solid fa-house text-sm"></i>
+                        <span>Visão Geral / Início</span>
+                    </button>
+
+                    <button onclick="navSwitchTo('markets')" id="nav-item-markets" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-gray-400 hover:text-white hover:bg-[#12161F] transition">
+                        <i class="fa-solid fa-chart-line text-sm"></i>
+                        <span>Terminal Trading & Mercados</span>
+                    </button>
+
+                    <button onclick="navSwitchTo('movements')" id="nav-item-movements" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-gray-400 hover:text-white hover:bg-[#12161F] transition">
+                        <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+                        <span>Extrato & Movimentos</span>
+                    </button>
+
+                    <button onclick="showIBANModal()" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-gray-400 hover:text-white hover:bg-[#12161F] transition">
+                        <i class="fa-solid fa-credit-card text-sm"></i>
+                        <span>Dados da Conta / IBAN</span>
+                    </button>
+                </nav>
+
+                <!-- Atalhos de Depósito e Transferência -->
+                <div class="pt-4 border-t border-gray-800/80 space-y-2">
+                    <button onclick="showDepositModal()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-2.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-circle-arrow-down"></i>
+                        <span>Depositar Fundos</span>
+                    </button>
+                    <button onclick="showTransferModal()" class="w-full bg-[#12161F] hover:bg-[#1A202C] text-gray-200 font-bold py-2.5 rounded-xl text-xs border border-gray-800 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-emerald-400"></i>
+                        <span>Transferir</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rodapé Sidebar -->
+            <div class="pt-4 border-t border-gray-800/80 text-[10px] text-gray-500 flex items-center justify-between">
+                <span><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> SSL 256-Bit</span>
+                <span>v4.2 Pro</span>
+            </div>
+        </aside>
+
+        <!-- ==================== TELA DE LOGIN OVERLAY ==================== -->
+        <div id="login-screen" class="fixed inset-0 z-50 bg-[#0B0E14] flex items-center justify-center p-4 overflow-y-auto transition-all duration-500">
+            <div class="w-full max-w-md bg-[#12161F] border border-gray-800 rounded-3xl p-6 lg:p-8 shadow-2xl relative">
+                
+                <!-- Topbar do Login -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-700 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-emerald-500/20">
+                            P
+                        </div>
+                        <div>
+                            <span class="text-lg font-extrabold tracking-wider text-white block leading-none">PRIME</span>
+                            <span class="text-[9px] font-bold text-emerald-400 tracking-[0.2em] uppercase">Private Bank</span>
+                        </div>
+                    </div>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold px-2.5 py-1 rounded-full border border-emerald-500/20">
+                        <i class="fa-solid fa-shield-halved mr-1"></i> Encriptado
+                    </span>
+                </div>
+
+                <div class="mb-6">
+                    <h1 class="text-xl lg:text-2xl font-black text-white mb-1 tracking-tight">Portal Financeiro Seguro</h1>
+                    <p class="text-xs text-gray-400">Aceda à sua conta de investimentos e homebanking com total proteção.</p>
+                </div>
+
+                <!-- Alerta de Erro / Informação -->
+                <div id="login-error" class="hidden mb-5 p-3.5 bg-red-950/60 border border-red-500/40 rounded-2xl flex items-center gap-3 text-red-400 text-xs shadow-lg">
+                    <i class="fa-solid fa-circle-exclamation text-base text-red-500 shrink-0"></i>
+                    <div>
+                        <span class="font-bold block text-white">Aviso de Acesso</span>
+                        <span id="login-error-text" class="text-[11px] text-gray-300">Utilizador ou credenciais incorretas. Tente novamente.</span>
+                    </div>
+                </div>
+
+                <!-- Formulário de Login Bank Pro -->
+                <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">Identificador / E-mail</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-gray-500"><i class="fa-regular fa-envelope"></i></span>
+                            <input 
+                                type="text" 
+                                id="login-email" 
+                                value="alexandre.rocha@primebank.com"
+                                placeholder="exemplo@primebank.com" 
+                                required
+                                class="w-full pl-11 pr-4 py-3.5 text-sm bg-[#0B0E14] border border-gray-800 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500 transition shadow-inner"
+                            >
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">Palavra-passe</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-gray-500"><i class="fa-solid fa-lock"></i></span>
+                            <input 
+                                type="password" 
+                                id="login-password" 
+                                value="password123"
+                                placeholder="••••••••••••" 
+                                required
+                                class="w-full pl-11 pr-11 py-3.5 text-sm bg-[#0B0E14] border border-gray-800 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500 transition shadow-inner"
+                            >
+                            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-3.5 text-gray-500 hover:text-white transition">
+                                <i class="fa-regular fa-eye" id="password-toggle-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2 pt-1">
+                        <label class="flex items-center gap-2 cursor-pointer text-gray-400 hover:text-gray-200">
+                            <input type="checkbox" checked class="rounded bg-gray-900 border-gray-700 text-emerald-500 focus:ring-0">
+                            <span>Lembrar sessão segura</span>
+                        </label>
+                        <button type="button" onclick="handleAccountRecoveryBypass()" class="text-emerald-400 font-semibold cursor-pointer hover:underline text-left sm:text-right">
+                            Recuperar Acesso Sem Bloqueio
+                        </button>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        id="btn-login"
+                        class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-black font-extrabold py-3.5 rounded-2xl text-sm transition shadow-lg shadow-emerald-500/25 mt-6 flex items-center justify-center gap-2">
+                        <span id="btn-login-text">Entrar no Banco Pro</span>
+                        <i class="fa-solid fa-shield-halved text-xs"></i>
+                    </button>
+                </form>
+
+                <!-- Biometric Shortcut -->
+                <div class="mt-6 text-center">
+                    <button type="button" onclick="handleBiometricLogin()" class="p-3 bg-[#0B0E14] hover:bg-[#1A202C] border border-gray-800 rounded-2xl text-emerald-400 text-xs font-semibold inline-flex items-center gap-2 transition w-full justify-center">
+                        <i class="fa-solid fa-fingerprint text-xl"></i>
+                        <span>Entrar com Face ID / Biometria Instantânea</span>
+                    </button>
+                </div>
+
+                <!-- Rodapé Login -->
+                <div class="text-center text-[10px] text-gray-500 pt-4 mt-6 border-t border-gray-800/60 flex items-center justify-between">
+                    <span>Prime Markets License #841/EU</span>
+                    <span>v4.2 Pro Banking (Desbloqueado)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ÁREA DE CONTEÚDO PRINCIPAL (DASHBOARD) ==================== -->
+        <main class="flex-1 min-h-screen flex flex-col justify-between overflow-x-hidden relative">
+
+            <!-- ==================== TELA DE HISTÓRICO E MOVIMENTOS ==================== -->
+            <div id="movements-screen" class="hidden absolute inset-0 z-40 bg-[#0B0E14] flex flex-col justify-start overflow-y-auto transition-all duration-300">
+                <!-- Header do Histórico -->
+                <div class="p-4 lg:p-6 bg-[#12161F] border-b border-gray-800/80 flex items-center justify-between sticky top-0 z-10">
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeMovementsScreen()" class="w-9 h-9 rounded-full bg-[#1A202C] flex items-center justify-center text-gray-300 hover:text-white transition border border-gray-700/50">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-base lg:text-lg font-extrabold text-white leading-tight">Extrato & Movimentos</h2>
+                            <p class="text-[10px] lg:text-xs text-gray-400">Histórico de transferências e investimentos em tempo real</p>
+                        </div>
+                    </div>
+                    <button onclick="refreshMovementsList()" class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/20 transition">
+                        <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="p-4 lg:p-8 space-y-5 max-w-5xl mx-auto w-full">
+                    <!-- Resumo Geral de Entradas vs Saídas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-[#12161F] p-4 lg:p-5 rounded-2xl border border-emerald-500/20 flex flex-col justify-between shadow-lg">
+                            <div class="flex items-center gap-2 text-emerald-400 text-xs font-semibold mb-1">
+                                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-arrow-down-left text-xs"></i>
+                                </div>
+                                <span>Entradas Totais</span>
+                            </div>
+                            <span id="total-entradas" class="text-xl lg:text-2xl font-black text-white font-mono">+ €0,00</span>
+                        </div>
+
+                        <div class="bg-[#12161F] p-4 lg:p-5 rounded-2xl border border-red-500/20 flex flex-col justify-between shadow-lg">
+                            <div class="flex items-center gap-2 text-red-400 text-xs font-semibold mb-1">
+                                <div class="w-7 h-7 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-arrow-up-right text-xs"></i>
+                                </div>
+                                <span>Saídas Totais</span>
+                            </div>
+                            <span id="total-saidas" class="text-xl lg:text-2xl font-black text-white font-mono">- €0,00</span>
+                        </div>
+                    </div>
+
+                    <!-- Filtros de Seleção (Abas) -->
+                    <div class="flex items-center bg-[#12161F] p-1.5 rounded-2xl border border-gray-800 text-xs font-semibold max-w-md">
+                        <button onclick="filterMovements('todos')" id="tab-todos" class="flex-1 py-2.5 rounded-xl text-center bg-emerald-500 text-black font-extrabold transition shadow">
+                            Todos
+                        </button>
+                        <button onclick="filterMovements('entrada')" id="tab-entrada" class="flex-1 py-2.5 rounded-xl text-center text-gray-400 hover:text-white transition">
+                            Entradas
+                        </button>
+                        <button onclick="filterMovements('saida')" id="tab-saida" class="flex-1 py-2.5 rounded-xl text-center text-gray-400 hover:text-white transition">
+                            Saídas
+                        </button>
+                    </div>
+
+                    <!-- Lista de Movimentos Dynamic -->
+                    <div id="movements-list" class="space-y-3">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== TELA DE MERCADOS & TRADING PRO ==================== -->
+            <div id="markets-screen" class="hidden absolute inset-0 z-40 bg-[#0B0E14] flex flex-col justify-start overflow-y-auto transition-all duration-300">
+                
+                <!-- Header dos Mercados -->
+                <div class="px-4 py-3 lg:px-6 lg:py-4 bg-[#12161F] border-b border-gray-800 flex items-center justify-between sticky top-0 z-20">
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeMarketsScreen()" class="w-8 h-8 rounded-full bg-[#1A202C] flex items-center justify-center text-gray-300 hover:text-white transition border border-gray-700/50">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-sm lg:text-base font-black text-white leading-none">Terminal Trading Pro</h2>
+                            <span class="text-[9px] lg:text-[10px] text-emerald-400 font-bold">Gráficos & Cotações ao Vivo em Tempo Real</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] lg:text-xs font-mono font-bold text-gray-300 bg-[#1A202C] px-3 py-1.5 rounded-xl border border-gray-800">
+                            Saldo: <strong class="text-emerald-400" id="trading-balance-display">€1.000.000,00</strong>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Conteúdo Principal dos Mercados (Responsivo para PC e Telemóvel) -->
+                <div class="flex-1 p-3 lg:p-6 space-y-4 max-w-7xl mx-auto w-full">
+                    
+                    <!-- Abas Superiores de Categorias de Ativos -->
+                    <div class="flex items-center bg-[#12161F] p-1.5 rounded-2xl border border-gray-800 text-xs font-bold max-w-lg">
+                        <button onclick="switchMarketCategory('crypto')" id="cat-btn-crypto" class="flex-1 py-2 rounded-xl text-center bg-emerald-500 text-black transition shadow">
+                            <i class="fa-brands fa-bitcoin mr-1"></i> Cripto
+                        </button>
+                        <button onclick="switchMarketCategory('commodities')" id="cat-btn-commodities" class="flex-1 py-2 rounded-xl text-center text-gray-400 hover:text-white transition">
+                            <i class="fa-solid fa-cubes-stacked mr-1"></i> Commodities
+                        </button>
+                        <button onclick="switchMarketCategory('forex')" id="cat-btn-forex" class="flex-1 py-2 rounded-xl text-center text-gray-400 hover:text-white transition">
+                            <i class="fa-solid fa-money-bill-transfer mr-1"></i> Moedas
+                        </button>
+                    </div>
+
+                    <!-- Seletor Horizontal de Ativos em Destaque -->
+                    <div id="asset-selector-bar" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                        <!-- Preenchido via JS conforme a categoria -->
+                    </div>
+
+                    <!-- Layout em Grelha Desktop (Gráfico à Esquerda, Ordens à Direita) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+                        
+                        <!-- Coluna do Gráfico e Detalhes do Ativo -->
+                        <div class="lg:col-span-8 space-y-4">
+                            <!-- Card Principal do Ativo e Gráfico -->
+                            <div class="bg-[#12161F] rounded-3xl border border-gray-800 p-4 lg:p-6 space-y-4 shadow-lg">
+                                <!-- Informações Principais do Ativo Selecionado -->
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <div id="selected-asset-icon" class="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xl shrink-0">
+                                            <i class="fa-brands fa-bitcoin"></i>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <h3 id="selected-asset-name" class="text-base lg:text-lg font-black text-white">Bitcoin / Euro</h3>
+                                                <span id="selected-asset-symbol" class="text-[10px] bg-gray-800 text-gray-300 px-2 py-0.5 rounded font-mono font-bold">BTC/EUR</span>
+                                            </div>
+                                            <div class="text-[11px] text-gray-400 flex items-center gap-2 mt-0.5">
+                                                <span>24h Máx: <strong class="text-gray-200" id="asset-24h-high">82.100,00</strong></span>
+                                                <span>●</span>
+                                                <span>24h Mín: <strong class="text-gray-200" id="asset-24h-low">79.800,00</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-left sm:text-right">
+                                        <div id="selected-asset-price" class="text-xl lg:text-2xl font-black text-white font-mono leading-tight">81.416,00 €</div>
+                                        <span id="selected-asset-change" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md inline-block mt-1">+2.45%</span>
+                                    </div>
+                                </div>
+
+                                <!-- Controlos do Gráfico (Timeframe + Tipo de Gráfico) -->
+                                <div class="flex flex-wrap items-center justify-between border-t border-b border-gray-800/80 py-2 gap-2 text-xs font-bold">
+                                    <!-- Timeframes -->
+                                    <div class="flex items-center gap-1.5 text-gray-400">
+                                        <button onclick="setTimeframe('1M')" class="tf-btn px-2.5 py-1 rounded-lg hover:text-white transition">1M</button>
+                                        <button onclick="setTimeframe('5M')" class="tf-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">5M</button>
+                                        <button onclick="setTimeframe('15M')" class="tf-btn px-2.5 py-1 rounded-lg hover:text-white transition">15M</button>
+                                        <button onclick="setTimeframe('1H')" class="tf-btn px-2.5 py-1 rounded-lg hover:text-white transition">1H</button>
+                                        <button onclick="setTimeframe('1D')" class="tf-btn px-2.5 py-1 rounded-lg hover:text-white transition">1D</button>
+                                    </div>
+
+                                    <!-- Chart Type -->
+                                    <div class="flex items-center gap-1 bg-[#1A202C] p-1 rounded-xl border border-gray-800">
+                                        <button onclick="setChartType('candles')" id="chart-type-candles" class="px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-extrabold transition text-xs">
+                                            <i class="fa-solid fa-chart-column mr-1"></i> Velas
+                                        </button>
+                                        <button onclick="setChartType('line')" id="chart-type-line" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition text-xs">
+                                            <i class="fa-solid fa-chart-line mr-1"></i> Linha
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Canvas do Gráfico Interativo com Altura Responsiva -->
+                                <div class="relative w-full h-64 lg:h-96 bg-[#0B0E14] rounded-2xl overflow-hidden border border-gray-800/80 flex items-center justify-center">
+                                    <canvas id="trading-chart-canvas" class="w-full h-full block"></canvas>
+                                    
+                                    <!-- Overlay indicador ao vivo -->
+                                    <div class="absolute top-3 right-3 flex items-center gap-1.5 bg-[#12161F]/90 backdrop-blur px-3 py-1 rounded-full border border-gray-800 text-[10px] text-emerald-400 font-mono font-bold shadow-lg">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                        <span>MERCADO EM DIRETO</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Posições Abertas do Utilizador -->
+                            <div class="bg-[#12161F] rounded-3xl border border-gray-800 p-4 lg:p-5 space-y-3 shadow-lg">
+                                <div class="flex items-center justify-between pb-2 border-b border-gray-800">
+                                    <h4 class="text-xs font-black text-white uppercase tracking-wider">Posições & Ordens Ativas</h4>
+                                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/20" id="active-positions-count">0 Posições</span>
+                                </div>
+
+                                <div id="positions-container" class="space-y-2.5 pt-1">
+                                    <!-- Preenchido via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna do Formúlário de Execução de Ordens -->
+                        <div class="lg:col-span-4">
+                            <div class="bg-[#12161F] rounded-3xl border border-gray-800 p-4 lg:p-6 space-y-4 shadow-lg sticky top-20">
+                                <h3 class="text-xs font-black text-white uppercase tracking-wider border-b border-gray-800 pb-2">Boleta de Negociação</h3>
+
+                                <!-- Selector Compra (Long) vs Venda (Short) -->
+                                <div class="grid grid-cols-2 gap-2 p-1 bg-[#1A202C] rounded-2xl border border-gray-800 text-xs font-black">
+                                    <button onclick="setTradeSide('buy')" id="btn-side-buy" class="py-3 rounded-xl bg-emerald-500 text-black transition shadow flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-circle-arrow-up"></i>
+                                        <span>COMPRAR / LONG</span>
+                                    </button>
+                                    <button onclick="setTradeSide('sell')" id="btn-side-sell" class="py-3 rounded-xl text-gray-400 hover:text-white transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-circle-arrow-down"></i>
+                                        <span>VENDER / SHORT</span>
+                                    </button>
+                                </div>
+
+                                <!-- Tipo de Ordem e Alavancagem -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                    <div>
+                                        <label class="block text-gray-400 text-[10px] uppercase font-semibold mb-1">Tipo de Ordem</label>
+                                        <select id="order-type-select" class="w-full bg-[#1A202C] border border-gray-800 rounded-xl p-3 text-white font-bold focus:outline-none focus:border-emerald-500">
+                                            <option value="market">A Mercado (Instantânea)</option>
+                                            <option value="limit">Ordem Limite</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-400 text-[10px] uppercase font-semibold mb-1">Alavancagem (Leverage)</label>
+                                        <select id="order-leverage-select" onchange="calculateTradeUnits()" class="w-full bg-[#1A202C] border border-gray-800 rounded-xl p-3 text-emerald-400 font-mono font-bold focus:outline-none focus:border-emerald-500">
+                                            <option value="1">1x (Sem Alavancagem)</option>
+                                            <option value="5">5x Cross</option>
+                                            <option value="10" selected>10x Cross Pro</option>
+                                            <option value="20">20x High Risk</option>
+                                            <option value="50">50x VIP Margin</option>
+                                            <option value="100">100x Max Leverage</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Input Montante a Negociar -->
+                                <div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <label class="text-gray-400 text-[10px] uppercase font-semibold">Valor da Ordem (€)</label>
+                                        <span class="text-[10px] text-gray-400">Disp: <strong class="text-white" id="trade-max-disp">€1.000.000,00</strong></span>
+                                    </div>
+                                    <div class="relative">
+                                        <input type="number" id="trade-amount-input" placeholder="1000.00" min="10" step="50" oninput="calculateTradeUnits()" class="w-full bg-[#1A202C] border border-gray-800 rounded-2xl p-3.5 text-white font-mono font-black text-sm focus:outline-none focus:border-emerald-500 pr-16">
+                                        <span class="absolute right-3.5 top-3.5 text-xs text-gray-400 font-bold">EUR</span>
+                                    </div>
+                                    
+                                    <!-- Percentagem Presets -->
+                                    <div class="grid grid-cols-4 gap-1.5 mt-2">
+                                        <button onclick="setTradeAmountPercent(25)" class="py-1.5 bg-[#1A202C] hover:bg-gray-800 text-gray-300 font-mono text-xs font-bold rounded-lg border border-gray-800 transition">25%</button>
+                                        <button onclick="setTradeAmountPercent(50)" class="py-1.5 bg-[#1A202C] hover:bg-gray-800 text-gray-300 font-mono text-xs font-bold rounded-lg border border-gray-800 transition">50%</button>
+                                        <button onclick="setTradeAmountPercent(75)" class="py-1.5 bg-[#1A202C] hover:bg-gray-800 text-gray-300 font-mono text-xs font-bold rounded-lg border border-gray-800 transition">75%</button>
+                                        <button onclick="setTradeAmountPercent(100)" class="py-1.5 bg-[#1A202C] hover:bg-gray-800 text-emerald-400 font-mono text-xs font-bold rounded-lg border border-gray-800 transition">100%</button>
+                                    </div>
+                                </div>
+
+                                <!-- Estimativa de Tamanho da Posição -->
+                                <div class="bg-[#0B0E14] p-3.5 rounded-2xl border border-gray-800/80 space-y-2 text-xs">
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Tamanho da Posição (C/ Alavancagem):</span>
+                                        <span id="calc-position-size" class="font-mono text-white font-bold">€0,00</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Unidades do Ativo Adquiridas:</span>
+                                        <span id="calc-asset-units" class="font-mono text-emerald-400 font-bold">0.0000 BTC</span>
+                                    </div>
+                                </div>
+
+                                <!-- Botão Executar Negociação -->
+                                <button id="btn-execute-trade" onclick="executeTradeOrder()" class="w-full bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-black font-extrabold py-4 rounded-2xl text-xs lg:text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    <span id="btn-trade-action-text">EXECUTAR COMPRA DE BITCOIN</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ==================== HOME DASHBOARD (VISÃO GERAL) ==================== -->
+            <div class="flex-1 pb-24 lg:pb-12 bg-[#0B0E14] overflow-y-auto">
+                
+                <!-- App Header Banco Pro (Mobile & Desktop Topbar) -->
+                <header class="px-4 py-3 lg:px-8 lg:py-4 flex items-center justify-between gap-4 border-b border-gray-800/60 bg-[#0B0E14]/90 backdrop-blur sticky top-0 z-20">
+                    <div class="flex items-center gap-3">
+                        <!-- Botão Avatar Mobile -->
+                        <div class="lg:hidden relative">
+                            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" 
+                                     alt="User Profile" 
+                                     class="w-full h-full rounded-[14px] object-cover"
+                                     onerror="this.src='https://placehold.co/100x100/12161F/0ECB81?text=PRO'">
+                            </div>
+                            <span class="absolute -bottom-1 -right-1 bg-emerald-500 text-black font-black text-[8px] px-1 rounded-full border border-[#0B0E14]">
+                                VIP
+                            </span>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span id="user-display-name" class="text-xs lg:text-sm font-black text-white">Alexandre V. Rocha</span>
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i>
+                            </div>
+                            <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.2 rounded border border-emerald-500/20">
+                                Conta Verificada Pro
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Acções Rápidas Direita -->
+                    <div class="flex items-center gap-2.5">
+                        <button onclick="openMovementsScreen()" class="w-9 h-9 lg:w-10 lg:h-10 rounded-2xl bg-[#12161F] border border-gray-800 flex items-center justify-center text-gray-300 hover:text-white transition">
+                            <i class="fa-solid fa-receipt text-xs lg:text-sm"></i>
+                        </button>
+                        <button onclick="triggerToast('Suporte Privado 24/7 Ativo &amp; Disponível')" class="w-9 h-9 lg:w-10 lg:h-10 rounded-2xl bg-[#12161F] border border-gray-800 flex items-center justify-center text-emerald-400 hover:text-white transition relative">
+                            <i class="fa-solid fa-headset text-xs lg:text-sm"></i>
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        </button>
+                        <button onclick="showIBANModal()" class="w-9 h-9 lg:w-10 lg:h-10 rounded-2xl bg-[#12161F] border border-gray-800 flex items-center justify-center text-gray-300 hover:text-white transition">
+                            <i class="fa-solid fa-building-columns text-xs lg:text-sm"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="p-4 lg:p-8 space-y-6 max-w-7xl mx-auto">
+                    
+                    <!-- Top Section: Card de Património + Ações Rápidas Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        <!-- Card de Saldo Principal Banking Style -->
+                        <div class="lg:col-span-7 bg-gradient-to-br from-[#12161F] via-[#1A202C] to-[#0F172A] p-6 lg:p-8 rounded-3xl border border-gray-800 shadow-glow-card relative overflow-hidden flex flex-col justify-between">
+                            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                            <div>
+                                <div class="flex items-center justify-between text-gray-400 text-xs font-medium mb-3">
+                                    <div class="flex items-center gap-2 cursor-pointer hover:text-white transition" onclick="toggleBalanceVisibility()">
+                                        <span class="uppercase tracking-wider text-[11px] font-bold">Património Total Líquido</span>
+                                        <i id="eye-icon" class="fa-regular fa-eye text-emerald-400 text-sm"></i>
+                                    </div>
+                                    <span class="text-[10px] lg:text-xs bg-emerald-500/15 text-emerald-400 px-3 py-1 rounded-full font-bold flex items-center gap-1.5 border border-emerald-500/20">
+                                        <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> +3.42% Yield
+                                    </span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <div class="flex items-baseline gap-2">
+                                        <span id="balance-amount" class="text-3xl lg:text-5xl font-black tracking-tight text-white font-mono">1.000.000,00</span>
+                                        <span id="balance-currency" class="text-lg lg:text-2xl font-extrabold text-emerald-400">EUR</span>
+                                    </div>
+                                    <div id="balance-usd" class="text-xs lg:text-sm text-gray-400 font-medium mt-1">≈ $1.088.000,00 USD</div>
+                                </div>
+                            </div>
+
+                            <!-- Rendimentos / Auto-Invest Yield Banner -->
+                            <div class="mt-6 pt-4 border-t border-gray-800/80 flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2 text-gray-300">
+                                    <i class="fa-solid fa-piggy-bank text-emerald-400 text-base"></i>
+                                    <span class="text-xs">Prime Earn APY: <strong class="text-emerald-400">8.5% ao ano</strong></span>
+                                </div>
+                                <button onclick="triggerToast('Prime Staking &amp; Earn ativado!')" class="text-xs font-bold text-black bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 rounded-xl transition shadow">
+                                    Ativar Yield
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Grelha de Ações Rápidas Estilo Banco Pro -->
+                        <div class="lg:col-span-5 bg-[#12161F] p-6 rounded-3xl border border-gray-800 shadow-lg flex flex-col justify-between space-y-4">
+                            <h3 class="text-xs font-black text-white uppercase tracking-wider">Atalhos Operacionais</h3>
+                            
+                            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3 text-center">
+                                <div onclick="showDepositModal()" class="flex flex-col items-center gap-2 p-3 bg-[#1A202C] hover:bg-gray-800/80 rounded-2xl border border-gray-800/80 cursor-pointer transition">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-circle-arrow-down"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-200 font-bold">Depositar</span>
+                                </div>
+
+                                <div onclick="showTransferModal()" class="flex flex-col items-center gap-2 p-3 bg-[#1A202C] hover:bg-gray-800/80 rounded-2xl border border-gray-800/80 cursor-pointer transition">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-200 font-bold">Transferir</span>
+                                </div>
+
+                                <div onclick="openMarketsScreen()" class="flex flex-col items-center gap-2 p-3 bg-[#1A202C] hover:bg-gray-800/80 rounded-2xl border border-gray-800/80 cursor-pointer transition">
+                                    <div class="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-200 font-bold">Trading</span>
+                                </div>
+
+                                <div onclick="openMovementsScreen()" class="flex flex-col items-center gap-2 p-3 bg-[#1A202C] hover:bg-gray-800/80 rounded-2xl border border-gray-800/80 cursor-pointer transition">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-200 font-bold">Histórico</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Cotações em Tempo Real e Carteira de Investimentos -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs font-black text-white uppercase tracking-wider">Ativos & Cotações em Tempo Real</h3>
+                            <button onclick="openMarketsScreen()" class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20 hover:bg-emerald-500/20 transition">
+                                Terminal Trading Pro <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+                            </button>
+                        </div>
+
+                        <!-- Lista de Criptos e Ativos com atalho para o Terminal de Trading -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="crypto-list">
+
+                            <!-- Bitcoin Row -->
+                            <div class="bg-[#12161F] p-4 rounded-2xl border border-gray-800 hover:border-gray-700 transition flex items-center justify-between cursor-pointer" id="row-btc" onclick="openTradingForAsset('crypto', 'btc')">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-lg shrink-0">
+                                        <i class="fa-brands fa-bitcoin"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="font-extrabold text-white text-sm">Bitcoin</span>
+                                            <span class="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.2 rounded font-mono">BTC</span>
+                                        </div>
+                                        <span class="text-xs text-gray-400">Ativo Digital Reserva</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div class="font-bold text-white text-sm font-mono" id="btc-price">81.416,00 €</div>
+                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block mt-0.5">+2.45%</span>
+                                </div>
+                            </div>
+
+                            <!-- Ethereum Row -->
+                            <div class="bg-[#12161F] p-4 rounded-2xl border border-gray-800 hover:border-gray-700 transition flex items-center justify-between cursor-pointer" id="row-eth" onclick="openTradingForAsset('crypto', 'eth')">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-lg shrink-0">
+                                        <i class="fa-brands fa-ethereum"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="font-extrabold text-white text-sm">Ethereum</span>
+                                            <span class="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.2 rounded font-mono">ETH</span>
+                                        </div>
+                                        <span class="text-xs text-gray-400">Smart Contracts</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div class="font-bold text-white text-sm font-mono" id="eth-price">2.450,80 €</div>
+                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block mt-0.5">+1.12%</span>
+                                </div>
+                            </div>
+
+                            <!-- Ouro Commodity Row -->
+                            <div class="bg-[#12161F] p-4 rounded-2xl border border-gray-800 hover:border-gray-700 transition flex items-center justify-between cursor-pointer" id="row-xau" onclick="openTradingForAsset('commodities', 'xau')">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center font-bold text-lg shrink-0">
+                                        <i class="fa-solid fa-coins"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="font-extrabold text-white text-sm">Ouro Físico</span>
+                                            <span class="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.2 rounded font-mono">XAU</span>
+                                        </div>
+                                        <span class="text-xs text-gray-400">Commodity Refúgio</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div class="font-bold text-white text-sm font-mono" id="xau-price">2.380,50 €</div>
+                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block mt-0.5">+0.85%</span>
+                                </div>
+                            </div>
+
+                            <!-- EUR/USD Forex Row -->
+                            <div class="bg-[#12161F] p-4 rounded-2xl border border-gray-800 hover:border-gray-700 transition flex items-center justify-between cursor-pointer" id="row-eurusd" onclick="openTradingForAsset('forex', 'eurusd')">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-lg shrink-0">
+                                        <i class="fa-solid fa-money-bill-transfer"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="font-extrabold text-white text-sm">Euro / Dólar</span>
+                                            <span class="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.2 rounded font-mono">EUR/USD</span>
+                                        </div>
+                                        <span class="text-xs text-gray-400">Moedas Forex</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div class="font-bold text-white text-sm font-mono" id="eurusd-price">1,0885 $</div>
+                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block mt-0.5">+0.32%</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Barra de Navegação Inferior Mobile -->
+            <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-[#0B0E14]/95 backdrop-blur border-t border-gray-800/80 py-3 px-3 flex justify-around items-center z-30">
+                <button onclick="navSwitchTo('home')" class="flex flex-col items-center gap-1 text-emerald-400 w-1/5">
+                    <i class="fa-solid fa-house text-lg"></i>
+                    <span class="text-[10px] font-extrabold">Início</span>
+                </button>
+
+                <button onclick="navSwitchTo('markets')" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition w-1/5">
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                    <span class="text-[10px] font-semibold">Mercados</span>
+                </button>
+
+                <button onclick="showTransferModal()" class="flex flex-col items-center justify-center -mt-6">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-black flex items-center justify-center text-xl shadow-lg shadow-emerald-500/30 border-2 border-[#0B0E14] active:scale-95 transition">
+                        <i class="fa-solid fa-right-left"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-emerald-400 mt-0.5">Transferir</span>
+                </button>
+
+                <button onclick="navSwitchTo('movements')" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition w-1/5">
+                    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                    <span class="text-[10px] font-semibold">Extrato</span>
+                </button>
+
+                <button onclick="showIBANModal()" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition w-1/5">
+                    <i class="fa-solid fa-credit-card text-lg"></i>
+                    <span class="text-[10px] font-semibold">Conta</span>
+                </button>
+            </nav>
+
+        </main>
+
+        <!-- ==================== MODAIS E DIÁLOGOS BANCÁRIOS ==================== -->
+
+        <!-- Elemento Toast Notification -->
+        <div id="toast-msg" class="hidden fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A202C] border border-emerald-500/80 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs lg:text-sm transition-all duration-300 max-w-[90%]">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+            <span id="toast-text" class="font-medium">Notificação bancária</span>
+        </div>
+
+        <!-- Modal de Depósito Unificado -->
+        <div id="deposit-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-[#12161F] border border-gray-800 rounded-3xl p-6 max-w-md w-full shadow-2xl flex flex-col space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar">
+                <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-arrow-down text-emerald-400 text-lg"></i>
+                        <span class="text-sm font-extrabold text-white">Depositar Fundos</span>
+                    </div>
+                    <button onclick="closeDepositModal()" class="text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Abas de Métodos de Depósito -->
+                <div class="grid grid-cols-4 gap-1 bg-[#1A202C] p-1 rounded-2xl border border-gray-800 text-[10px] font-bold text-center">
+                    <button onclick="switchDepositTab('iban')" id="dep-tab-iban" class="py-2.5 rounded-xl bg-emerald-500 text-black transition">
+                        <i class="fa-solid fa-building-columns block text-xs mb-0.5"></i> SEPA
+                    </button>
+                    <button onclick="switchDepositTab('card')" id="dep-tab-card" class="py-2.5 rounded-xl text-gray-400 hover:text-white transition">
+                        <i class="fa-solid fa-credit-card block text-xs mb-0.5"></i> Cartão
+                    </button>
+                    <button onclick="switchDepositTab('mb')" id="dep-tab-mb" class="py-2.5 rounded-xl text-gray-400 hover:text-white transition">
+                        <i class="fa-solid fa-receipt block text-xs mb-0.5"></i> MB / WAY
+                    </button>
+                    <button onclick="switchDepositTab('crypto')" id="dep-tab-crypto" class="py-2.5 rounded-xl text-gray-400 hover:text-white transition">
+                        <i class="fa-brands fa-bitcoin block text-xs mb-0.5"></i> Cripto
+                    </button>
+                </div>
+
+                <!-- Conteúdo Tab IBAN / SEPA -->
+                <div id="dep-content-iban" class="space-y-3.5 text-xs">
+                    <p class="text-xs text-gray-400 leading-relaxed">Transfira diretamente do seu banco para a sua conta Prime via SEPA/IBAN Instantâneo.</p>
+                    <div>
+                        <span class="text-gray-400 text-[10px] block uppercase font-semibold">Titular da Conta</span>
+                        <span class="font-bold text-white text-sm">Alexandre V. Rocha</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 text-[10px] block uppercase font-semibold">IBAN Único de Depósito</span>
+                        <div class="flex items-center justify-between bg-[#1A202C] p-3 rounded-xl border border-gray-800 mt-1 font-mono text-emerald-400 font-bold">
+                            <span class="text-xs truncate">PT50 0035 0128 0004 8129 9123 0</span>
+                            <button onclick="copyToClipboard('PT50003501280004812991230', 'IBAN Copiado!')" class="text-gray-400 hover:text-white shrink-0 ml-2">
+                                <i class="fa-regular fa-copy text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                            <span class="text-gray-400 text-[10px] block uppercase font-semibold">BIC / SWIFT</span>
+                            <span class="font-mono text-white font-bold">PRMBPT21</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 text-[10px] block uppercase font-semibold">Prazo</span>
+                            <span class="text-emerald-400 font-bold">Instantâneo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conteúdo Tab Cartão de Crédito / Débito -->
+                <div id="dep-content-card" class="hidden space-y-3 text-xs">
+                    <p class="text-xs text-gray-400 leading-relaxed">Depósito imediato com Cartão Visa, Mastercard ou AMEX.</p>
+                    <form onsubmit="handleCardDeposit(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Número do Cartão</label>
+                            <div class="relative">
+                                <input type="text" placeholder="4532 •••• •••• 8892" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                                <i class="fa-brands fa-cc-visa absolute right-3 top-3.5 text-emerald-400 text-base"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Validade</label>
+                                <input type="text" placeholder="MM/AA" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">CVV / CVC</label>
+                                <input type="password" maxlength="4" placeholder="•••" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Montante a Depositar (€)</label>
+                            <input type="number" step="10" min="10" value="500" placeholder="250,00" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-3 rounded-xl text-xs transition shadow mt-2">
+                            Confirmar Depósito Cartão
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Conteúdo Tab MB WAY / Multibanco -->
+                <div id="dep-content-mb" class="hidden space-y-3 text-xs">
+                    <p class="text-xs text-gray-400 leading-relaxed">Receba uma notificação no seu telemóvel para aprovar no MB WAY.</p>
+                    <form onsubmit="handleMBWayDeposit(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Número de Telemóvel MB WAY</label>
+                            <input type="tel" placeholder="912 345 678" value="912345678" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Montante (€)</label>
+                            <input type="number" step="5" min="5" value="250" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-3 rounded-xl text-xs transition shadow mt-2">
+                            Gerar Pedido MB WAY
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Conteúdo Tab Criptomoedas -->
+                <div id="dep-content-crypto" class="hidden space-y-3 text-xs">
+                    <p class="text-xs text-gray-400 leading-relaxed">Depósito direto via USDT / BTC em rede blockchain.</p>
+                    <div>
+                        <span class="text-gray-400 text-[10px] block uppercase font-semibold">Endereço USDT (TRC-20)</span>
+                        <div class="flex items-center justify-between bg-[#1A202C] p-3 rounded-xl border border-gray-800 mt-1 font-mono text-xs text-emerald-400 font-bold">
+                            <span class="text-xs truncate">TYP3k92Mpx19A0LxZq88xZq91La2Kq</span>
+                            <button onclick="copyToClipboard('TYP3k92Mpx19A0LxZq88xZq91La2Kq', 'Endereço TRC20 Copiado!')" class="text-gray-400 hover:text-white shrink-0 ml-2">
+                                <i class="fa-regular fa-copy text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Modal de Transferência -->
+        <div id="transfer-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-[#12161F] border border-gray-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-emerald-400 text-lg"></i>
+                        <span class="text-sm font-extrabold text-white">Enviar Transferência</span>
+                    </div>
+                    <button onclick="closeTransferModal()" class="text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="handleTransferSubmit(event)" class="space-y-3.5 text-xs">
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Nome do Beneficiário</label>
+                        <input type="text" id="trans-dest" placeholder="ex: João Silva" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">IBAN do Destinatário</label>
+                        <input type="text" id="trans-iban" placeholder="PT50 0000 0000 0000 0000 0000 0" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Montante (€)</label>
+                        <input type="number" id="trans-amount" step="10" min="10" value="150" required class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1 uppercase font-semibold">Descrição / Descritivo</label>
+                        <input type="text" id="trans-desc" placeholder="Pagamento / Serviços" class="w-full p-3 bg-[#1A202C] border border-gray-800 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500">
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-3.5 rounded-xl text-xs transition shadow mt-2">
+                        Executar Transferência
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Conta e Detalhes IBAN -->
+        <div id="iban-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-[#12161F] border border-gray-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-credit-card text-emerald-400 text-lg"></i>
+                        <span class="text-sm font-extrabold text-white">Detalhes da Conta Prime</span>
+                    </div>
+                    <button onclick="closeIBANModal()" class="text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-3.5 text-xs">
+                    <div class="p-3.5 bg-[#1A202C] rounded-2xl border border-gray-800 space-y-1">
+                        <span class="text-[10px] text-gray-400 uppercase font-semibold block">Titular Registado</span>
+                        <span class="text-base font-black text-white block">Alexandre V. Rocha</span>
+                        <span class="text-[10px] text-emerald-400 font-bold">Estado: Conta 100% Ativa e Sem Restrições</span>
+                    </div>
+
+                    <div>
+                        <span class="text-gray-400 text-[10px] block uppercase font-semibold">IBAN Principal</span>
+                        <div class="flex items-center justify-between bg-[#1A202C] p-3 rounded-xl border border-gray-800 mt-1 font-mono text-emerald-400 font-bold">
+                            <span class="text-xs truncate">PT50 0035 0128 0004 8129 9123 0</span>
+                            <button onclick="copyToClipboard('PT50003501280004812991230', 'IBAN Copiado!')" class="text-gray-400 hover:text-white shrink-0 ml-2">
+                                <i class="fa-regular fa-copy text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-[#1A202C] p-3 rounded-xl border border-gray-800">
+                            <span class="text-gray-400 text-[10px] block uppercase font-semibold">SWIFT/BIC</span>
+                            <span class="font-mono text-white font-bold text-xs">PRMBPT21</span>
+                        </div>
+                        <div class="bg-[#1A202C] p-3 rounded-xl border border-gray-800">
+                            <span class="text-gray-400 text-[10px] block uppercase font-semibold">Moeda Base</span>
+                            <span class="font-mono text-emerald-400 font-bold text-xs">EUR (€)</span>
+                        </div>
+                    </div>
+
+                    <button onclick="triggerToast('Relatório de Conta Exportado em PDF!')" class="w-full bg-[#1A202C] hover:bg-gray-800 text-white font-bold py-3 rounded-xl text-xs border border-gray-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-arrow-down text-emerald-400"></i>
+                        <span>Exportar Comprovativo de Titularidade</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== JAVASCRIPT & APLICAÇÃO LOGIC ==================== -->
+    <script>
+        // Estado Global da Conta e Mercados (Histórico de Movimentos Limpo)
+        const AppState = {
+            isLoggedIn: false,
+            balance: 1000000.00,
+            showBalance: true,
+            activeCategory: 'crypto', // crypto, commodities, forex
+            selectedAsset: 'btc',
+            tradeSide: 'buy', // buy, sell
+            chartType: 'candles', // candles, line
+            timeframe: '5M',
+            leverage: 10,
+            positions: [],
+            movements: [] // Histórico limpo
+        };
+
+        // Dados de Ativos Financeiros
+        const AssetsData = {
+            crypto: [
+                { id: 'btc', name: 'Bitcoin / Euro', symbol: 'BTC/EUR', price: 81416.00, change: 2.45, high: '82.100,00', low: '79.800,00', icon: 'fa-brands fa-bitcoin', iconColor: 'text-orange-400', bgIcon: 'bg-orange-500/10 border-orange-500/20' },
+                { id: 'eth', name: 'Ethereum / Euro', symbol: 'ETH/EUR', price: 2450.80, change: 1.12, high: '2.520,00', low: '2.410,00', icon: 'fa-brands fa-ethereum', iconColor: 'text-indigo-400', bgIcon: 'bg-indigo-500/10 border-indigo-500/20' },
+                { id: 'sol', name: 'Solana / Euro', symbol: 'SOL/EUR', price: 142.50, change: 5.64, high: '148.00', low: '135.20', icon: 'fa-solid fa-bolt', iconColor: 'text-purple-400', bgIcon: 'bg-purple-500/10 border-purple-500/20' },
+                { id: 'xrp', name: 'Ripple / Euro', symbol: 'XRP/EUR', price: 0.5840, change: -0.82, high: '0.6100', low: '0.5710', icon: 'fa-solid fa-coins', iconColor: 'text-blue-400', bgIcon: 'bg-blue-500/10 border-blue-500/20' }
+            ],
+            commodities: [
+                { id: 'xau', name: 'Ouro Físico / Euro', symbol: 'XAU/EUR', price: 2380.50, change: 0.85, high: '2.395,00', low: '2.360,00', icon: 'fa-solid fa-coins', iconColor: 'text-yellow-400', bgIcon: 'bg-yellow-500/10 border-yellow-500/20' },
+                { id: 'xag', name: 'Prata / Euro', symbol: 'XAG/EUR', price: 28.40, change: 1.35, high: '29.10', low: '27.90', icon: 'fa-solid fa-gem', iconColor: 'text-slate-300', bgIcon: 'bg-slate-500/10 border-slate-500/20' },
+                { id: 'wti', name: 'Petróleo WTI', symbol: 'WTI/USD', price: 74.20, change: -1.45, high: '76.00', low: '73.50', icon: 'fa-solid fa-oil-well', iconColor: 'text-amber-500', bgIcon: 'bg-amber-500/10 border-amber-500/20' }
+            ],
+            forex: [
+                { id: 'eurusd', name: 'Euro / Dólar', symbol: 'EUR/USD', price: 1.0885, change: 0.32, high: '1.0920', low: '1.0840', icon: 'fa-solid fa-money-bill-transfer', iconColor: 'text-blue-400', bgIcon: 'bg-blue-500/10 border-blue-500/20' },
+                { id: 'gbpusd', name: 'Libra / Dólar', symbol: 'GBP/USD', price: 1.3020, change: -0.15, high: '1.3080', low: '1.2990', icon: 'fa-solid fa-sterling-sign', iconColor: 'text-teal-400', bgIcon: 'bg-teal-500/10 border-teal-500/20' },
+                { id: 'usdjpy', name: 'Dólar / Iene', symbol: 'USD/JPY', price: 148.50, change: 0.45, high: '149.20', low: '147.80', icon: 'fa-solid fa-yen-sign', iconColor: 'text-rose-400', bgIcon: 'bg-rose-500/10 border-rose-500/20' }
+            ]
+        };
+
+        // Variáveis de Animação do Gráfico
+        let chartCanvas = null;
+        let chartCtx = null;
+
+        // Ao carregar a página
+        window.addEventListener('DOMContentLoaded', () => {
+            chartCanvas = document.getElementById('trading-chart-canvas');
+            if (chartCanvas) {
+                chartCtx = chartCanvas.getContext('2d');
+            }
+            updateBalanceUI();
+            renderMovementsList('todos');
+            switchMarketCategory('crypto');
+            
+            // Loop de flutuação de cotações em tempo real
+            setInterval(simulateMarketTicks, 2000);
+        });
+
+        // --- FUNÇÕES DE NAVEGAÇÃO E REPOSITORIO DE TELAS ---
+        function navSwitchTo(targetScreen) {
+            closeMarketsScreen();
+            closeMovementsScreen();
+
+            // Atualizar navegação desktop sidebar
+            const items = ['home', 'markets', 'movements'];
+            items.forEach(item => {
+                const navBtn = document.getElementById(`nav-item-${item}`);
+                if (navBtn) {
+                    if (item === targetScreen) {
+                        navBtn.className = 'w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 font-bold transition';
+                    } else {
+                        navBtn.className = 'w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-gray-400 hover:text-white hover:bg-[#12161F] transition font-semibold';
+                    }
+                }
+            });
+
+            if (targetScreen === 'markets') {
+                openMarketsScreen();
+            } else if (targetScreen === 'movements') {
+                openMovementsScreen();
+            }
+        }
+
+        // --- FUNÇÕES DE LOGIN E RECUPERAÇÃO SEM BLOQUEIO ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (email && password) {
+                unlockAndEnterApp("Sessão iniciada com sucesso. Bem-vindo!");
+            }
+        }
+
+        function handleBiometricLogin() {
+            unlockAndEnterApp("Autenticado via Face ID / Biometria!");
+        }
+
+        function handleAccountRecoveryBypass() {
+            const errDiv = document.getElementById('login-error');
+            errDiv.classList.add('hidden');
+            unlockAndEnterApp("Conta Desbloqueada e Recuperada com Sucesso!");
+        }
+
+        function unlockAndEnterApp(msg) {
+            AppState.isLoggedIn = true;
+            const loginScreen = document.getElementById('login-screen');
+            loginScreen.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                loginScreen.classList.add('hidden');
+            }, 400);
+            triggerToast(msg);
+        }
+
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('login-password');
+            const icon = document.getElementById('password-toggle-icon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                pwd.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // --- ATUALIZADORES DE UI E FORMATADORES ---
+        function updateBalanceUI() {
+            const balAmt = document.getElementById('balance-amount');
+            const balUsd = document.getElementById('balance-usd');
+            const tradingBal = document.getElementById('trading-balance-display');
+            const maxDisp = document.getElementById('trade-max-disp');
+
+            if (!AppState.showBalance) {
+                balAmt.innerText = '••••••••';
+                balUsd.innerText = '≈ $•••••••• USD';
+            } else {
+                balAmt.innerText = formatCurrency(AppState.balance);
+                balUsd.innerText = `≈ $${formatCurrency(AppState.balance * 1.088)} USD`;
+            }
+
+            if (tradingBal) tradingBal.innerText = `€${formatCurrency(AppState.balance)}`;
+            if (maxDisp) maxDisp.innerText = `€${formatCurrency(AppState.balance)}`;
+        }
+
+        function toggleBalanceVisibility() {
+            AppState.showBalance = !AppState.showBalance;
+            const eyeIcon = document.getElementById('eye-icon');
+            if (AppState.showBalance) {
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            } else {
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+            updateBalanceUI();
+        }
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
+        }
+
+        function triggerToast(text, duration = 3000) {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            if (!toast || !toastText) return;
+
+            toastText.innerText = text;
+            toast.classList.remove('hidden');
+            toast.classList.add('animate-bounce');
+
+            setTimeout(() => {
+                toast.classList.remove('animate-bounce');
+            }, 1000);
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, duration);
+        }
+
+        function copyToClipboard(text, msg = 'Copiado para a área de transferência!') {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                triggerToast(msg);
+            } catch (err) {
+                console.error('Falha ao copiar:', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Modais Visibilidade
+        function showDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
+        function closeDepositModal() { document.getElementById('deposit-modal').classList.add('hidden'); }
+        function showTransferModal() { document.getElementById('transfer-modal').classList.remove('hidden'); }
+        function closeTransferModal() { document.getElementById('transfer-modal').classList.add('hidden'); }
+        function showIBANModal() { document.getElementById('iban-modal').classList.remove('hidden'); }
+        function closeIBANModal() { document.getElementById('iban-modal').classList.add('hidden'); }
+
+        function switchDepositTab(tab) {
+            ['iban', 'card', 'mb', 'crypto'].forEach(t => {
+                const content = document.getElementById(`dep-content-${t}`);
+                const btn = document.getElementById(`dep-tab-${t}`);
+                if (content && btn) {
+                    if (t === tab) {
+                        content.classList.remove('hidden');
+                        btn.className = 'py-2.5 rounded-xl bg-emerald-500 text-black transition';
+                    } else {
+                        content.classList.add('hidden');
+                        btn.className = 'py-2.5 rounded-xl text-gray-400 hover:text-white transition';
+                    }
+                }
+            });
+        }
+
+        function handleCardDeposit(e) {
+            e.preventDefault();
+            closeDepositModal();
+            triggerToast("Depósito com cartão processado com sucesso!");
+        }
+
+        function handleMBWayDeposit(e) {
+            e.preventDefault();
+            closeDepositModal();
+            triggerToast("Pedido MB WAY enviado para o seu telemóvel!");
+        }
+
+        function handleTransferSubmit(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('trans-amount').value) || 0;
+            const dest = document.getElementById('trans-dest').value;
+
+            if (amount <= 0 || amount > AppState.balance) {
+                triggerToast("Saldo insuficiente ou valor inválido.");
+                return;
+            }
+
+            AppState.balance -= amount;
+            updateBalanceUI();
+
+            AppState.movements.unshift({
+                id: Date.now(),
+                type: 'saida',
+                title: `Transferência enviada para ${dest}`,
+                desc: 'Transferência SEPA Instantânea',
+                amount: amount,
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                status: 'Concluído'
+            });
+
+            closeTransferModal();
+            triggerToast(`Transferência de €${formatCurrency(amount)} realizada!`);
+            renderMovementsList('todos');
+        }
+
+        // --- NAVEGAÇÃO DE ECRÃS ---
+        function openMovementsScreen() {
+            document.getElementById('movements-screen').classList.remove('hidden');
+            renderMovementsList('todos');
+        }
+
+        function closeMovementsScreen() {
+            document.getElementById('movements-screen').classList.add('hidden');
+        }
+
+        function openMarketsScreen() {
+            document.getElementById('markets-screen').classList.remove('hidden');
+            setTimeout(resizeAndDrawChart, 150);
+        }
+
+        function closeMarketsScreen() {
+            document.getElementById('markets-screen').classList.add('hidden');
+        }
+
+        function openTradingForAsset(category, assetId) {
+            switchMarketCategory(category);
+            selectAsset(assetId);
+            openMarketsScreen();
+        }
+
+        // --- MOVIMENTOS / EXTRATO ---
+        function updateMovementsTotals() {
+            const totalEntradas = AppState.movements
+                .filter(m => m.type === 'entrada')
+                .reduce((acc, m) => acc + m.amount, 0);
+            const totalSaidas = AppState.movements
+                .filter(m => m.type === 'saida')
+                .reduce((acc, m) => acc + m.amount, 0);
+
+            const elEntradas = document.getElementById('total-entradas');
+            const elSaidas = document.getElementById('total-saidas');
+            if (elEntradas) elEntradas.innerText = `+ €${formatCurrency(totalEntradas)}`;
+            if (elSaidas) elSaidas.innerText = `- €${formatCurrency(totalSaidas)}`;
+        }
+
+        function renderMovementsList(filter) {
+            updateMovementsTotals();
+            const container = document.getElementById('movements-list');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const filtered = AppState.movements.filter(m => filter === 'todos' || m.type === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-gray-500 text-xs font-semibold">Sem movimentos registados nesta categoria.</div>`;
+                return;
+            }
+
+            filtered.forEach(m => {
+                const isEntrada = m.type === 'entrada';
+                const colorClass = isEntrada ? 'text-emerald-400' : 'text-red-400';
+                const sign = isEntrada ? '+' : '-';
+                const icon = isEntrada ? 'fa-arrow-down-left' : 'fa-arrow-up-right';
+                const bgIcon = isEntrada ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20';
+
+                const html = `
+                    <div class="bg-[#12161F] p-4 rounded-2xl border border-gray-800 flex items-center justify-between hover:border-gray-700 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl ${bgIcon} border flex items-center justify-center text-sm shrink-0">
+                                <i class="fa-solid ${icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs lg:text-sm font-bold text-white leading-tight">${m.title}</h4>
+                                <p class="text-[10px] lg:text-xs text-gray-400">${m.desc} • ${m.date}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs lg:text-sm font-black font-mono ${colorClass}">${sign} €${formatCurrency(m.amount)}</span>
+                            <span class="block text-[9px] lg:text-[10px] text-emerald-400 font-semibold">${m.status}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function filterMovements(type) {
+            ['todos', 'entrada', 'saida'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (btn) {
+                    if (t === type) {
+                        btn.className = 'flex-1 py-2.5 rounded-xl text-center bg-emerald-500 text-black font-extrabold transition shadow';
+                    } else {
+                        btn.className = 'flex-1 py-2.5 rounded-xl text-center text-gray-400 hover:text-white transition';
+                    }
+                }
+            });
+            renderMovementsList(type);
+        }
+
+        function refreshMovementsList() {
+            triggerToast("Extrato e saldo sincronizados em tempo real!");
+            renderMovementsList('todos');
+        }
+
+        // --- TERMINAL DE TRADING & MERCADOS ---
+        function switchMarketCategory(category) {
+            AppState.activeCategory = category;
+            
+            ['crypto', 'commodities', 'forex'].forEach(cat => {
+                const btn = document.getElementById(`cat-btn-${cat}`);
+                if (btn) {
+                    if (cat === category) {
+                        btn.className = 'flex-1 py-2 rounded-xl text-center bg-emerald-500 text-black font-black transition shadow';
+                    } else {
+                        btn.className = 'flex-1 py-2 rounded-xl text-center text-gray-400 hover:text-white transition';
+                    }
+                }
+            });
+
+            renderAssetSelectorBar();
+            const firstAsset = AssetsData[category][0].id;
+            selectAsset(firstAsset);
+        }
+
+        function renderAssetSelectorBar() {
+            const bar = document.getElementById('asset-selector-bar');
+            if (!bar) return;
+
+            bar.innerHTML = '';
+            const list = AssetsData[AppState.activeCategory] || [];
+
+            list.forEach(asset => {
+                const isSelected = asset.id === AppState.selectedAsset;
+                const activeClass = isSelected ? 'bg-[#1A202C] border-emerald-500 text-white shadow' : 'bg-[#12161F] border-gray-800 text-gray-400 hover:text-white';
+                
+                const btn = document.createElement('button');
+                btn.className = `flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-bold transition shrink-0 ${activeClass}`;
+                btn.onclick = () => selectAsset(asset.id);
+                btn.innerHTML = `
+                    <i class="${asset.icon} ${asset.iconColor}"></i>
+                    <span>${asset.symbol}</span>
+                `;
+                bar.appendChild(btn);
+            });
+        }
+
+        function selectAsset(assetId) {
+            AppState.selectedAsset = assetId;
+            const list = AssetsData[AppState.activeCategory] || [];
+            const asset = list.find(a => a.id === assetId) || list[0];
+
+            if (!asset) return;
+
+            document.getElementById('selected-asset-name').innerText = asset.name;
+            document.getElementById('selected-asset-symbol').innerText = asset.symbol;
+            document.getElementById('selected-asset-price').innerText = asset.symbol.includes('USD') ? `${formatCurrency(asset.price)} $` : `${formatCurrency(asset.price)} €`;
+            document.getElementById('selected-asset-change').innerText = `${asset.change >= 0 ? '+' : ''}${asset.change}%`;
+            document.getElementById('asset-24h-high').innerText = asset.high;
+            document.getElementById('asset-24h-low').innerText = asset.low;
+
+            const iconContainer = document.getElementById('selected-asset-icon');
+            iconContainer.className = `w-12 h-12 rounded-2xl ${asset.bgIcon} border flex items-center justify-center font-bold text-xl shrink-0 ${asset.iconColor}`;
+            iconContainer.innerHTML = `<i class="${asset.icon}"></i>`;
+
+            const btnText = document.getElementById('btn-trade-action-text');
+            if (btnText) {
+                const action = AppState.tradeSide === 'buy' ? 'COMPRAR' : 'VENDER';
+                btnText.innerText = `EXECUTAR ${action} DE ${asset.symbol.split('/')[0]}`;
+            }
+
+            renderAssetSelectorBar();
+            calculateTradeUnits();
+            resizeAndDrawChart();
+        }
+
+        function setTradeSide(side) {
+            AppState.tradeSide = side;
+            const buyBtn = document.getElementById('btn-side-buy');
+            const sellBtn = document.getElementById('btn-side-sell');
+            const executeBtn = document.getElementById('btn-execute-trade');
+
+            if (side === 'buy') {
+                buyBtn.className = 'py-3 rounded-xl bg-emerald-500 text-black transition shadow flex items-center justify-center gap-1.5';
+                sellBtn.className = 'py-3 rounded-xl text-gray-400 hover:text-white transition flex items-center justify-center gap-1.5';
+                executeBtn.className = 'w-full bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-black font-extrabold py-4 rounded-2xl text-xs lg:text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2';
+            } else {
+                sellBtn.className = 'py-3 rounded-xl bg-red-500 text-white transition shadow flex items-center justify-center gap-1.5';
+                buyBtn.className = 'py-3 rounded-xl text-gray-400 hover:text-white transition flex items-center justify-center gap-1.5';
+                executeBtn.className = 'w-full bg-red-500 hover:bg-red-400 active:scale-[0.98] text-white font-extrabold py-4 rounded-2xl text-xs lg:text-sm transition shadow-lg shadow-red-500/20 flex items-center justify-center gap-2';
+            }
+
+            const list = AssetsData[AppState.activeCategory] || [];
+            const asset = list.find(a => a.id === AppState.selectedAsset) || list[0];
+            const actionText = side === 'buy' ? 'COMPRAR' : 'VENDER';
+            document.getElementById('btn-trade-action-text').innerText = `EXECUTAR ${actionText} DE ${asset.symbol.split('/')[0]}`;
+        }
+
+        function setTimeframe(tf) {
+            AppState.timeframe = tf;
+            document.querySelectorAll('.tf-btn').forEach(btn => {
+                if (btn.innerText === tf) {
+                    btn.className = 'tf-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                } else {
+                    btn.className = 'tf-btn px-2.5 py-1 rounded-lg hover:text-white transition';
+                }
+            });
+            resizeAndDrawChart();
+        }
+
+        function setChartType(type) {
+            AppState.chartType = type;
+            const candleBtn = document.getElementById('chart-type-candles');
+            const lineBtn = document.getElementById('chart-type-line');
+
+            if (type === 'candles') {
+                candleBtn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-extrabold transition text-xs';
+                lineBtn.className = 'px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition text-xs';
+            } else {
+                lineBtn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-extrabold transition text-xs';
+                candleBtn.className = 'px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition text-xs';
+            }
+            resizeAndDrawChart();
+        }
+
+        function setTradeAmountPercent(pct) {
+            const amount = (AppState.balance * (pct / 100)).toFixed(2);
+            document.getElementById('trade-amount-input').value = amount;
+            calculateTradeUnits();
+        }
+
+        function calculateTradeUnits() {
+            const inputVal = parseFloat(document.getElementById('trade-amount-input').value) || 0;
+            const leverage = parseInt(document.getElementById('order-leverage-select').value) || 1;
+            
+            const list = AssetsData[AppState.activeCategory] || [];
+            const asset = list.find(a => a.id === AppState.selectedAsset) || list[0];
+
+            const totalPosition = inputVal * leverage;
+            const units = asset ? (totalPosition / asset.price).toFixed(4) : '0.0000';
+
+            document.getElementById('calc-position-size').innerText = `€${formatCurrency(totalPosition)}`;
+            document.getElementById('calc-asset-units').innerText = `${units} ${asset.symbol.split('/')[0]}`;
+        }
+
+        // --- EXECUÇÃO DE ORDENS E POSIÇÕES ---
+        function executeTradeOrder() {
+            const amount = parseFloat(document.getElementById('trade-amount-input').value);
+            if (!amount || amount <= 0) {
+                triggerToast('Introduza um valor válido para a ordem.');
+                return;
+            }
+
+            if (amount > AppState.balance) {
+                triggerToast('Saldo insuficiente para esta margem.');
+                return;
+            }
+
+            const leverage = parseInt(document.getElementById('order-leverage-select').value) || 1;
+            const list = AssetsData[AppState.activeCategory] || [];
+            const asset = list.find(a => a.id === AppState.selectedAsset) || list[0];
+
+            // Subtrair Margem do Saldo
+            AppState.balance -= amount;
+            updateBalanceUI();
+
+            // Criar Posição
+            const position = {
+                id: Date.now(),
+                asset: asset.symbol,
+                side: AppState.tradeSide,
+                entryPrice: asset.price,
+                currentPrice: asset.price,
+                amount: amount,
+                leverage: leverage,
+                pnl: 0
+            };
+
+            AppState.positions.push(position);
+            
+            // Registar no Extrato
+            AppState.movements.unshift({
+                id: Date.now(),
+                type: 'saida',
+                title: `Ordem ${AppState.tradeSide.toUpperCase()} ${asset.symbol}`,
+                desc: `Alavancagem ${leverage}x • Posição Aberta`,
+                amount: amount,
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                status: 'Executado'
+            });
+
+            triggerToast(`Posição de ${asset.symbol} aberta com sucesso!`);
+            renderPositions();
+            document.getElementById('trade-amount-input').value = '';
+            calculateTradeUnits();
+        }
+
+        function closePosition(positionId) {
+            const index = AppState.positions.findIndex(p => p.id === positionId);
+            if (index !== -1) {
+                const pos = AppState.positions[index];
+                const returnedAmount = pos.amount + pos.pnl;
+                
+                AppState.balance += Math.max(0, returnedAmount);
+                updateBalanceUI();
+
+                AppState.movements.unshift({
+                    id: Date.now(),
+                    type: pos.pnl >= 0 ? 'entrada' : 'saida',
+                    title: `Fecho Posição ${pos.asset}`,
+                    desc: `PnL Final: €${formatCurrency(pos.pnl)}`,
+                    amount: Math.abs(pos.pnl),
+                    date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                    status: 'Concluído'
+                });
+
+                AppState.positions.splice(index, 1);
+                triggerToast('Posição fechada com sucesso!');
+                renderPositions();
+            }
+        }
+
+        function renderPositions() {
+            const container = document.getElementById('positions-container');
+            const countLabel = document.getElementById('active-positions-count');
+
+            if (!container) return;
+
+            countLabel.innerText = `${AppState.positions.length} Posição(ões)`;
+
+            if (AppState.positions.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-6 text-gray-500 text-xs">
+                        <i class="fa-solid fa-chart-pie text-2xl mb-1.5 opacity-40"></i>
+                        <p>Sem posições ativas no momento.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            AppState.positions.forEach(pos => {
+                const isProfit = pos.pnl >= 0;
+                const pnlClass = isProfit ? 'text-emerald-400' : 'text-red-400';
+                const sideBg = pos.side === 'buy' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30';
+
+                const html = `
+                    <div class="bg-[#0B0E14] p-3.5 rounded-2xl border border-gray-800 flex items-center justify-between text-xs">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-white text-sm">${pos.asset}</span>
+                                <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase border ${sideBg}">${pos.side} ${pos.leverage}x</span>
+                            </div>
+                            <div class="text-[10px] text-gray-400 font-mono">
+                                Entrada: ${formatCurrency(pos.entryPrice)} • Atual: ${formatCurrency(pos.currentPrice)}
+                            </div>
+                        </div>
+
+                        <div class="text-right flex items-center gap-3">
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">PnL Não Realizado</span>
+                                <span class="font-mono font-black text-sm ${pnlClass}">${isProfit ? '+' : ''}€${formatCurrency(pos.pnl)}</span>
+                            </div>
+                            <button onclick="closePosition(${pos.id})" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-bold rounded-xl border border-red-500/30 text-xs transition">
+                                Fechar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // --- SIMULAÇÃO DE COTAÇÕES AO VIVO ---
+        function simulateMarketTicks() {
+            Object.keys(AssetsData).forEach(cat => {
+                AssetsData[cat].forEach(asset => {
+                    const deltaPercent = (Math.random() - 0.49) * 0.004;
+                    asset.price = Math.max(0.0001, asset.price * (1 + deltaPercent));
+                    
+                    if (asset.id === AppState.selectedAsset) {
+                        const priceDisplay = document.getElementById('selected-asset-price');
+                        if (priceDisplay) {
+                            priceDisplay.innerText = asset.symbol.includes('USD') ? `${formatCurrency(asset.price)} $` : `${formatCurrency(asset.price)} €`;
+                            priceDisplay.classList.add(deltaPercent >= 0 ? 'flash-up' : 'flash-down');
+                            setTimeout(() => priceDisplay.classList.remove('flash-up', 'flash-down'), 800);
+                        }
+                    }
+
+                    // Atualizar na lista principal se visível
+                    const rowPrice = document.getElementById(`${asset.id}-price`);
+                    if (rowPrice) {
+                        rowPrice.innerText = asset.symbol.includes('USD') ? `${formatCurrency(asset.price)} $` : `${formatCurrency(asset.price)} €`;
+                    }
+                });
+            });
+
+            // Atualizar PnL das Posições Abertas
+            AppState.positions.forEach(pos => {
+                const list = [].concat(...Object.values(AssetsData));
+                const asset = list.find(a => a.symbol === pos.asset);
+                if (asset) {
+                    pos.currentPrice = asset.price;
+                    const diffPercent = (pos.currentPrice - pos.entryPrice) / pos.entryPrice;
+                    const multiplier = pos.side === 'buy' ? 1 : -1;
+                    pos.pnl = pos.amount * diffPercent * pos.leverage * multiplier;
+                }
+            });
+
+            if (AppState.positions.length > 0) {
+                renderPositions();
+            }
+
+            drawChart();
+        }
+
+        // --- ENGENHO DE DESENHO DE GRÁFICOS NO CANVAS RESPONSIÇÃO ---
+        function resizeAndDrawChart() {
+            if (!chartCanvas) return;
+            const parent = chartCanvas.parentElement;
+            if (!parent) return;
+
+            chartCanvas.width = parent.clientWidth;
+            chartCanvas.height = parent.clientHeight;
+            drawChart();
+        }
+
+        function drawChart() {
+            if (!chartCtx || !chartCanvas) return;
+
+            const w = chartCanvas.width;
+            const h = chartCanvas.height;
+            chartCtx.clearRect(0, 0, w, h);
+
+            if (w === 0 || h === 0) return;
+
+            // Grelha de Fundo
+            chartCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            chartCtx.lineWidth = 1;
+
+            const gridStepX = w > 600 ? 60 : 40;
+            const gridStepY = h > 300 ? 40 : 30;
+
+            for (let x = 0; x < w; x += gridStepX) {
+                chartCtx.beginPath();
+                chartCtx.moveTo(x, 0);
+                chartCtx.lineTo(x, h);
+                chartCtx.stroke();
+            }
+
+            for (let y = 0; y < h; y += gridStepY) {
+                chartCtx.beginPath();
+                chartCtx.moveTo(0, y);
+                chartCtx.lineTo(w, y);
+                chartCtx.stroke();
+            }
+
+            // Gerar Candlesticks / Linha
+            const candlesCount = w > 600 ? 40 : 25;
+            const candleWidth = w / candlesCount;
+
+            let seedPrice = 100;
+            const points = [];
+
+            for (let i = 0; i < candlesCount; i++) {
+                const open = seedPrice;
+                const close = open + (Math.sin(i * 0.8) * 3) + ((Math.random() - 0.48) * 4);
+                const high = Math.max(open, close) + Math.random() * 2;
+                const low = Math.min(open, close) - Math.random() * 2;
+                seedPrice = close;
+                points.push({ open, close, high, low });
+            }
+
+            // Calcular escala Y
+            let minP = Math.min(...points.map(p => p.low));
+            let maxP = Math.max(...points.map(p => p.high));
+            if (minP === maxP) { minP -= 1; maxP += 1; }
+
+            const range = maxP - minP;
+            const getY = (val) => h - 20 - ((val - minP) / range) * (h - 40);
+
+            if (AppState.chartType === 'candles') {
+                points.forEach((p, i) => {
+                    const x = i * candleWidth + candleWidth / 2;
+                    const isGreen = p.close >= p.open;
+                    const color = isGreen ? '#0ECB81' : '#F6465D';
+
+                    // Pavio / Mecha
+                    chartCtx.strokeStyle = color;
+                    chartCtx.lineWidth = 1.5;
+                    chartCtx.beginPath();
+                    chartCtx.moveTo(x, getY(p.high));
+                    chartCtx.lineTo(x, getY(p.low));
+                    chartCtx.stroke();
+
+                    // Corpo da Vela
+                    chartCtx.fillStyle = color;
+                    const bodyTop = getY(Math.max(p.open, p.close));
+                    const bodyBottom = getY(Math.min(p.open, p.close));
+                    const bodyHeight = Math.max(2, bodyBottom - bodyTop);
+                    const bw = Math.max(2, candleWidth * 0.6);
+                    chartCtx.fillRect(x - bw / 2, bodyTop, bw, bodyHeight);
+                });
+            } else {
+                // Desenhar gráfico de Linha
+                chartCtx.strokeStyle = '#0ECB81';
+                chartCtx.lineWidth = 2.5;
+                chartCtx.beginPath();
+
+                points.forEach((p, i) => {
+                    const x = i * candleWidth + candleWidth / 2;
+                    const y = getY(p.close);
+                    if (i === 0) chartCtx.moveTo(x, y);
+                    else chartCtx.lineTo(x, y);
+                });
+                chartCtx.stroke();
+
+                // Preenchimento com gradiente suave
+                const gradient = chartCtx.createLinearGradient(0, 0, 0, h);
+                gradient.addColorStop(0, 'rgba(14, 203, 129, 0.25)');
+                gradient.addColorStop(1, 'rgba(14, 203, 129, 0.0)');
+                
+                chartCtx.lineTo((points.length - 1) * candleWidth + candleWidth / 2, h);
+                chartCtx.lineTo(candleWidth / 2, h);
+                chartCtx.closePath();
+                chartCtx.fillStyle = gradient;
+                chartCtx.fill();
+            }
+        }
+
+        // Redimensionar canvas dinamicamente
+        window.addEventListener('resize', resizeAndDrawChart);
+    </script>
+</body>
+</html>
